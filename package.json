@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/mhz-edu/photos2map#readme",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "multer": "1.4.4",
+    "exif": "0.6.0"
   }
 }
