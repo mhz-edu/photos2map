@@ -1,4 +1,4 @@
-export let postgres = {
+exports.postgres = {
     host: process.env.PG_HOST, 
     port: process.env.PG_PORT,
     user: process.env.PG_USER,

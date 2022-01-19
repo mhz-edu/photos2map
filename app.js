@@ -1,7 +1,7 @@
 const express = require('express');
 const multer  = require('multer');
 const ExifImage = require('exif').ExifImage;
-import { postgres } from './config.js';
+const postgres = require('./config.js');
 
 const app = express();
 
