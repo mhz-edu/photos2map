@@ -1,6 +1,7 @@
 const express = require('express');
 const multer  = require('multer');
 const ExifImage = require('exif').ExifImage;
+import { postgres } from './config.js';
 
 const app = express();
 
@@ -8,7 +9,7 @@ app.use(express.json());
 
 const pg = require('knex')({
     client: 'pg',
-    connection: process.env.DATABASE_URL,
+    connection: postgres,
     searchPath: ['knex', 'public'],
   });
 
