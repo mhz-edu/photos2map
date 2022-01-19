@@ -1,7 +1,6 @@
 const express = require('express');
 const multer  = require('multer');
 const ExifImage = require('exif').ExifImage;
-const postgres = require('./config.js');
 
 const app = express();
 
@@ -9,10 +8,14 @@ app.use(express.json());
 
 const pg = require('knex')({
     client: 'pg',
-    connection: postgres,
+    connection: process.env.DATABASE_URL,
     searchPath: ['knex', 'public'],
     ssl: {
         rejectUnauthorized: false
+    },
+    pool: {
+        min: 2,
+        max: 10
     }
   });
 
