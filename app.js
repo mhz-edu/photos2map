@@ -11,6 +11,9 @@ const pg = require('knex')({
     client: 'pg',
     connection: postgres,
     searchPath: ['knex', 'public'],
+    ssl: {
+        rejectUnauthorized: false
+    }
   });
 
 const storage = multer.memoryStorage()
