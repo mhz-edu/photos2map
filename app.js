@@ -1,23 +1,14 @@
 const express = require('express');
 const multer  = require('multer');
 const ExifImage = require('exif').ExifImage;
+const knex = require('knex');
+const knexfile = require('./knexfile.js')
 
 const app = express();
 
 app.use(express.json());
 
-const pg = require('knex')({
-    client: 'pg',
-    connection: process.env.DATABASE_URL,
-    searchPath: ['knex', 'public'],
-    ssl: {
-        rejectUnauthorized: false
-    },
-    pool: {
-        min: 2,
-        max: 10
-    }
-  });
+const pg = knex(knexfile.development);
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage });
