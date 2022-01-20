@@ -10,6 +10,7 @@ module.exports = {
       tableName: 'knex_migrations'
     },
     ssl: {
+      require: true,
       rejectUnauthorized: false
     }
   }
