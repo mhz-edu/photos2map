@@ -1,8 +1,8 @@
-const express = require('express');
-const multer  = require('multer');
+import express from 'express';
+import multer from 'multer';
 const ExifImage = require('exif').ExifImage;
-const knex = require('knex');
-const knexfile = require('./knexfile.js')
+import knex from 'knex';
+import knexfile from './knexfile';
 
 const app = express();
 
@@ -15,7 +15,7 @@ const upload = multer({ storage: storage });
 
 app.post('/api/file', upload.single('upfile'), ((req, res) => {
     new Promise(function(resolve, reject) {
-        new ExifImage({image: req.file.buffer}, function (error, exifData) {
+        new ExifImage({image: req.file!.buffer}, function (error: Error, exifData: any) {
             if (error) {
                 console.log('Error: '+error.message);
                 reject(error);
@@ -40,4 +40,4 @@ app.get('/api/users', (req, res) => {
     .catch((error) => res.json(error))
 })
 
-module.exports = app;
+export default app;
