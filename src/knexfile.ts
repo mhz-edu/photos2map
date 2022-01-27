@@ -1,4 +1,4 @@
-module.exports = {
+export = {
   development: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
@@ -7,10 +7,11 @@ module.exports = {
       max: 10
     },
     migrations: {
-      tableName: 'knex_migrations'
+      tableName: 'knex_migrations',
+      extension: 'ts'
     },
     ssl: {
-      require: false,
+      require: true,
       rejectUnauthorized: false
     }
   }
