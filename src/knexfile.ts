@@ -1,4 +1,4 @@
-export = {
+const knexfile = {
   development: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
@@ -16,3 +16,5 @@ export = {
     }
   }
 };
+
+export default knexfile;
