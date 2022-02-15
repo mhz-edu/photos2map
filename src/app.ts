@@ -1,7 +1,7 @@
-import express from "express";
+import express from 'express';
 
-import usersRouter from "./routes/users";
-import imagesRouter from "./routes/images";
+import usersRouter from './routes/users';
+import imagesRouter from './routes/images';
 
 const app = express();
 

@@ -1,23 +1,23 @@
 import pg from '../db';
 
 class User {
-    email: string;
+  email: string;
 
-    constructor(email: string) {
-        this.email = email;
-    }
+  constructor(email: string) {
+    this.email = email;
+  }
 
-    save() {
-        return pg('users').insert(this).returning('*');
-    }
+  save() {
+    return pg('users').insert(this).returning('*');
+  }
 
-    static fetchAll() {
-        return pg('users').select();
-    }
+  static fetchAll() {
+    return pg('users').select();
+  }
 
-    static fetchById(id: any) {
-        return pg('users').select().where({ id: id });
-    }
+  static fetchById(id: any) {
+    return pg('users').select().where({ id: id });
+  }
 }
 
 export default User;

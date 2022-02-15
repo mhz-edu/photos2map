@@ -1,14 +1,14 @@
-import { Router } from "express";
-import multer from "multer";
+import { Router } from 'express';
+import multer from 'multer';
 
-const { ExifImage } = require("exif");
+const { ExifImage } = require('exif');
 
 const imagesRouter = Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-imagesRouter.post("/api/file", upload.single("upfile"), (req, res) => {
+imagesRouter.post('/api/file', upload.single('upfile'), (req, res) => {
   new Promise(function (resolve, reject) {
     new ExifImage(
       { image: req.file!.buffer },
