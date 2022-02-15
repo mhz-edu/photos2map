@@ -1,22 +1,13 @@
-import express from "express";
+import { Router } from "express";
 
-import pg from "../db";
+import usersController from '../controllers/users'
 
-const usersRouter = express.Router();
+const usersRouter = Router();
 
-usersRouter.post("/api/users", (req, res) => {
-  let userEmail = req.body.useremail;
-  pg("users")
-    .insert({ email: userEmail })
-    .then(() => res.json(userEmail))
-    .catch((error) => res.json(error));
-});
+usersRouter.post("/api/users", usersController.postUser);
 
-usersRouter.get("/api/users", (req, res) => {
-  pg.select()
-    .from("users")
-    .then((rows) => res.json(rows))
-    .catch((error) => res.json(error));
-});
+usersRouter.get('/api/users/:userId', usersController.getOneUser);
+
+usersRouter.get("/api/users", usersController.getUsers);
 
 export default usersRouter;

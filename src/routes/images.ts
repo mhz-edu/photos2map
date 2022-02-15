@@ -1,9 +1,9 @@
-import express from "express";
+import { Router } from "express";
 import multer from "multer";
 
 const { ExifImage } = require("exif");
 
-const imagesRouter = express.Router();
+const imagesRouter = Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });

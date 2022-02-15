@@ -9,4 +9,4 @@ app.use(express.json());
 app.use(usersRouter);
 app.use(imagesRouter);
 
-export default app;
+app.listen(process.env.PORT || 3000);
