@@ -1,11 +1,7 @@
 import pg from '../db';
 
 class User {
-  email: string;
-
-  constructor(email: string) {
-    this.email = email;
-  }
+  constructor(public email: string, public name: string) {}
 
   save() {
     return pg('users').insert(this).returning('*');

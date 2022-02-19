@@ -1,23 +1,23 @@
+import { RequestHandler } from 'express';
 import User from '../models/user';
 
-const usersController: any = {};
-
-usersController.postUser = (req: any, res: any, next: any) => {
+export const postUser: RequestHandler = (req, res, next) => {
   let userEmail = req.body.useremail;
-  let user = new User(userEmail);
+  let name = req.body.name;
+  let user = new User(userEmail, name);
   user
     .save()
     .then((user) => res.json(user))
     .catch((error) => res.json(error));
 };
 
-usersController.getUsers = (req: any, res: any, next: any) => {
+export const getUsers: RequestHandler = (req, res, next) => {
   User.fetchAll()
     .then((rows) => res.json(rows))
     .catch((error) => res.json(error));
 };
 
-usersController.getOneUser = (req: any, res: any, next: any) => {
+export const getOneUser: RequestHandler = (req, res, next) => {
   let userId = req.params.userId;
   User.fetchById(userId)
     .then((rows) => {
@@ -25,5 +25,3 @@ usersController.getOneUser = (req: any, res: any, next: any) => {
     })
     .catch((error) => res.json(error));
 };
-
-export default usersController;
