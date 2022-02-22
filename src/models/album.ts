@@ -1,18 +1,42 @@
 import pg from '../db';
 
-class Album {
+interface IAlbum {
+  id?: number;
+  title: string;
+  user_id: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  save: () => Promise<Album>;
+}
+
+class Album implements IAlbum {
   constructor(public user_id: number, public title: string) {}
 
-  save() {
-    return pg('albums').insert(this).returning('*');
+  save(): Promise<Album> {
+    return pg
+      .table<Album>('albums')
+      .insert(this)
+      .returning('*')
+      .then((records) => {
+        return new Promise((resolve, reject) => {
+          if (records.length === 1) {
+            resolve(records[0]);
+          }
+          reject(new Error('Album create failed'));
+        });
+      });
   }
 
-  static fetchAll() {
-    return pg('albums').select();
+  static fetchAll(): Promise<Album[]> {
+    return pg.table<Album>('albums').select();
   }
 
-  static fetchById(id: any) {
-    return pg('albums').select().where({ id: id });
+  static fetchAllByUserId(id: number): Promise<Album[]> {
+    return pg.table<Album>('albums').select().where('user_id', id);
+  }
+
+  static fetchById(id: number): Promise<Album | undefined> {
+    return pg.table<Album>('albums').select().where('id', id).first();
   }
 }
 

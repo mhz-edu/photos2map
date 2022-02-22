@@ -13,15 +13,18 @@ export const postAlbum: RequestHandler = (req, res, next) => {
 
 export const getAlbums: RequestHandler = (req, res, next) => {
   Album.fetchAll()
-    .then((rows) => res.json(rows))
+    .then((albums) => res.json(albums))
     .catch((error) => res.json(error));
 };
 
 export const getOneAlbum: RequestHandler = (req, res, next) => {
-  let albumId = req.params.albumId;
+  let albumId = parseInt(req.params.albumId);
   Album.fetchById(albumId)
-    .then((rows) => {
-      res.json(rows[0]);
+    .then((album) => {
+      if (album) {
+        res.json(album);
+      }
+      res.json('Album not found');
     })
     .catch((error) => res.json(error));
 };
