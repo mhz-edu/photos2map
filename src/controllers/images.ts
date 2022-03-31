@@ -1,15 +1,15 @@
 import { RequestHandler } from 'express';
-const { ExifImage } = require('exif');
+import { ExifData, ExifImage } from 'exif';
 
 import Image from '../models/image';
 import coordinatesConverter from '../util/coordinatesConverter';
 
 export const postImage: RequestHandler = (req, res) => {
   let albumId = parseInt(req.params.albumId);
-  new Promise(function (resolve, reject) {
+  new Promise<ExifData['gps']>(function (resolve, reject) {
     new ExifImage(
       { image: req.file!.buffer },
-      (error: Error, exifData: any) => {
+      (error: Error | null, exifData: ExifData) => {
         if (error) {
           console.log(`Error: ${error.message}`);
           reject(error);
@@ -21,12 +21,14 @@ export const postImage: RequestHandler = (req, res) => {
     );
   })
     .then((gps) => {
+      console.log('parsing data for coords');
+
       const coords = coordinatesConverter(gps);
       const img = new Image(albumId, coords.lat, coords.lon);
       return img.save();
     })
     .then((result) => res.json(result))
-    .catch((error) => res.json(error));
+    .catch((error) => res.json(error.message));
 };
 
 export const getAlbumImages: RequestHandler = (req, res) => {
