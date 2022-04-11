@@ -1,6 +1,8 @@
 import knex from 'knex';
 import knexfile from './knexfile';
 
-const pg = knex(knexfile.development);
+const env = process.env.NODE_ENV || 'development';
+
+const pg = knex(knexfile[env]);
 
 export default pg;
