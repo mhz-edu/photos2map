@@ -3,3 +3,4 @@ dist
 package-lock.json
 *.sh
 .vscode
+.env

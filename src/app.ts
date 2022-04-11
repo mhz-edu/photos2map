@@ -7,8 +7,8 @@ import albumsRouter from './routes/albums';
 const app = express();
 
 app.use(express.json());
-app.use(usersRouter);
+app.use('/api/users', usersRouter);
 app.use(imagesRouter);
-app.use(albumsRouter);
+app.use('/api/albums', albumsRouter);
 
 app.listen(process.env.PORT || 3000);

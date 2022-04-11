@@ -9,12 +9,12 @@ import {
 
 const usersRouter = Router();
 
-usersRouter.post('/api/users', postUser);
+usersRouter.post('/', postUser);
 
-usersRouter.get('/api/users/:userId', getOneUser);
+usersRouter.get('/:userId', getOneUser);
 
-usersRouter.get('/api/users', getUsers);
+usersRouter.get('/', getUsers);
 
-usersRouter.get('/api/users/:userId/albums', getUserAlbums);
+usersRouter.get('/:userId/albums', getUserAlbums);
 
 export default usersRouter;

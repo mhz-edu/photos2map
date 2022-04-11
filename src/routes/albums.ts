@@ -4,10 +4,10 @@ import { getAlbums, getOneAlbum, postAlbum } from '../controllers/albums';
 
 const albumsRouter = Router();
 
-albumsRouter.post('/api/albums', postAlbum);
+albumsRouter.post('/', postAlbum);
 
-albumsRouter.get('/api/albums/:albumId', getOneAlbum);
+albumsRouter.get('/:albumId', getOneAlbum);
 
-albumsRouter.get('/api/albums', getAlbums);
+albumsRouter.get('/', getAlbums);
 
 export default albumsRouter;
