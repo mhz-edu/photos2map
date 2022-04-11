@@ -1,10 +1,15 @@
 import { Router } from 'express';
+import { body } from 'express-validator';
 
 import { getAlbums, getOneAlbum, postAlbum } from '../controllers/albums';
 
 const albumsRouter = Router();
 
-albumsRouter.post('/', postAlbum);
+albumsRouter.post(
+  '/',
+  [body('title').not().isEmpty(), body('user_id').not().isEmpty().isInt()],
+  postAlbum
+);
 
 albumsRouter.get('/:albumId', getOneAlbum);
 

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { body } from 'express-validator';
 
 import {
   postUser,
@@ -9,7 +10,14 @@ import {
 
 const usersRouter = Router();
 
-usersRouter.post('/', postUser);
+usersRouter.post(
+  '/',
+  [
+    body('name').not().isEmpty(),
+    body('useremail').isEmail().not().isEmpty().normalizeEmail(),
+  ],
+  postUser
+);
 
 usersRouter.get('/:userId', getOneUser);
 
