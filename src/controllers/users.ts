@@ -1,15 +1,29 @@
 import { RequestHandler } from 'express';
+import { validationResult } from 'express-validator';
+
 import User from '../models/user';
 import Album from '../models/album';
 
+interface IError extends Error {
+  statusCode?: number;
+  data: any;
+}
+
 export const postUser: RequestHandler = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error('Validation failed') as IError;
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
   let userEmail = req.body.useremail;
   let name = req.body.name;
   let user = new User(userEmail, name);
   user
     .save()
     .then((user) => res.json(user))
-    .catch((error) => res.json(error));
+    .catch((error) => next(error));
 };
 
 export const getUsers: RequestHandler = (req, res, next) => {
