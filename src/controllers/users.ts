@@ -9,7 +9,7 @@ interface IError extends Error {
   data: any;
 }
 
-export const postUser: RequestHandler = (req, res, next) => {
+export const postUser: RequestHandler = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed') as IError;
@@ -20,10 +20,12 @@ export const postUser: RequestHandler = (req, res, next) => {
   let userEmail = req.body.useremail;
   let name = req.body.name;
   let user = new User(userEmail, name);
-  user
-    .save()
-    .then((user) => res.json(user))
-    .catch((error) => next(error));
+  try {
+    const savedUser = await user.save();
+    res.status(201).json(savedUser);
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const getUsers: RequestHandler = (req, res, next) => {

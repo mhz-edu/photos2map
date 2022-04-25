@@ -5,7 +5,7 @@ const coordinatesConverter = (gpsParams: ExifData['gps']) => {
   const SECONDS_IN_DEGREE = 3600;
   let latSign = 1;
   let lonSign = 1;
-  if (!(gpsParams.GPSLatitude || gpsParams.GPSLongitude)) {
+  if (!gpsParams.GPSLatitude || !gpsParams.GPSLongitude) {
     throw new Error('No GPS data');
   }
   if (gpsParams.GPSLatitudeRef === 'S') {
