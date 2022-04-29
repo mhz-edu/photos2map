@@ -257,7 +257,9 @@
         "id": { "type": "integer" },
         "album_id": { "type": "integer" },
         "lat": { "type": "number", "format": "float" },
-        "lon": { "type": "number", "format": "float" }
+        "lon": { "type": "number", "format": "float" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
       }
     }
   }
