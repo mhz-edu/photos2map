@@ -1,0 +1,266 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "photos2map API"
+  },
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "schemes": ["https", "http"],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Returns a list of users",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/User" }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Creates a new user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "useremail": { "type": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Returns a single user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User Id to get",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/albums": {
+      "get": {
+        "tags": ["Albums"],
+        "summary": "Returns a list of albums",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Album" }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Albums"],
+        "summary": "Creates a new album",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "user_id": { "type": "integer" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Album"
+            }
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/albums/{albumId}": {
+      "get": {
+        "tags": ["Albums"],
+        "summary": "Returns a single album",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album Id to get",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Album"
+            }
+          },
+          "404": {
+            "description": "Album not found"
+          }
+        }
+      }
+    },
+    "/users/{userId}/albums": {
+      "get": {
+        "tags": ["Albums"],
+        "summary": "Returns albums for a given user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User Id to get",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Album" }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/albums/{albumId}/images": {
+      "post": {
+        "tags": ["Images"],
+        "summary": "Extract coordinates from the image",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album Id to put image into",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "upfile",
+            "in": "formData",
+            "description": "Image to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Images"],
+        "summary": "Returns images for a given album",
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album Id to get",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Image" }
+            }
+          },
+          "404": {
+            "description": "Album not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      }
+    },
+    "Album": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "title": { "type": "string" },
+        "user_id": { "type": "integer" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      }
+    },
+    "Image": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "album_id": { "type": "integer" },
+        "lat": { "type": "number", "format": "float" },
+        "lon": { "type": "number", "format": "float" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      }
+    }
+  }
+}
