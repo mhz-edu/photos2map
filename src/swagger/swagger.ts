@@ -3,15 +3,10 @@ import swaggerUi from 'swagger-ui-express';
 
 import swaggerSpec from './swagger.json';
 
-const extractHost: RequestHandler = (req, res, next) => {
-  swaggerSpec.host = req.hostname;
-  next();
-};
+const host = process.env.NODE_APP_HOST || 'localhost:3000';
+swaggerSpec.host = host;
+const swaggerUiSetup = swaggerUi.setup(swaggerSpec);
 
-const swaggerHandler = [
-  extractHost,
-  ...swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec),
-];
+const swaggerHandler = [...swaggerUi.serve, swaggerUiSetup];
 
 export default swaggerHandler;

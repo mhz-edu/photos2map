@@ -3,7 +3,7 @@
   "info": {
     "title": "photos2map API"
   },
-  "host": "localhost:3000",
+  "host": "",
   "basePath": "/api",
   "schemes": ["https", "http"],
   "paths": {
