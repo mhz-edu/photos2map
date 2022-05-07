@@ -50,3 +50,12 @@ export const getOneAlbum: RequestHandler = (req, res, next) => {
     })
     .catch((error) => res.json(error));
 };
+
+export const getUserAlbums: RequestHandler = (req, res, next) => {
+  let userId = parseInt(req.params.userId);
+  Album.fetchAllByUserId(userId)
+    .then((albums) => {
+      res.json(albums);
+    })
+    .catch((error) => res.json(error));
+};
