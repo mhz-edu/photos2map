@@ -1,5 +1,4 @@
-import { describe, it } from 'mocha';
-import { expect } from 'chai';
+import { describe, it, expect } from '@jest/globals';
 import coordinatesConverter from './coordinatesConverter';
 
 describe('Coordinates converter', function () {
@@ -12,13 +11,10 @@ describe('Coordinates converter', function () {
       GPSLongitudeRef: 'W',
     };
 
-    expect(coordinatesConverter(gpsParams)).to.has.property('lat');
-    expect(coordinatesConverter(gpsParams).lat).to.be.closeTo(
-      38.008604,
-      epsilon
-    );
-    expect(coordinatesConverter(gpsParams)).to.has.property('lon');
-    expect(coordinatesConverter(gpsParams).lon).to.be.closeTo(
+    expect(coordinatesConverter(gpsParams)).toHaveProperty('lat');
+    expect(coordinatesConverter(gpsParams).lat).toBeCloseTo(38.008604, epsilon);
+    expect(coordinatesConverter(gpsParams)).toHaveProperty('lon');
+    expect(coordinatesConverter(gpsParams).lon).toBeCloseTo(
       -78.453199,
       epsilon
     );
@@ -33,13 +29,13 @@ describe('Coordinates converter', function () {
       GPSLongitudeRef: 'E',
     };
 
-    expect(coordinatesConverter(gpsParams)).to.has.property('lat');
-    expect(coordinatesConverter(gpsParams).lat).to.be.closeTo(
+    expect(coordinatesConverter(gpsParams)).toHaveProperty('lat');
+    expect(coordinatesConverter(gpsParams).lat).toBeCloseTo(
       -33.856159,
       epsilon
     );
-    expect(coordinatesConverter(gpsParams)).to.has.property('lon');
-    expect(coordinatesConverter(gpsParams).lon).to.be.closeTo(
+    expect(coordinatesConverter(gpsParams)).toHaveProperty('lon');
+    expect(coordinatesConverter(gpsParams).lon).toBeCloseTo(
       151.215256,
       epsilon
     );
@@ -51,7 +47,9 @@ describe('Coordinates converter', function () {
       GPSLatitudeRef: 'N',
       GPSLongitudeRef: 'W',
     };
-    expect(coordinatesConverter.bind(this, gpsParams)).to.throw('No GPS data');
+    expect(() => {
+      coordinatesConverter(gpsParams);
+    }).toThrow('No GPS data');
   });
 
   it('should throw an error if gpsParams has no latitude', function () {
@@ -60,6 +58,8 @@ describe('Coordinates converter', function () {
       GPSLatitudeRef: 'N',
       GPSLongitudeRef: 'W',
     };
-    expect(coordinatesConverter.bind(this, gpsParams)).to.throw('No GPS data');
+    expect(() => {
+      coordinatesConverter(gpsParams);
+    }).toThrow('No GPS data');
   });
 });

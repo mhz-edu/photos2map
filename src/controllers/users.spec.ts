@@ -1,14 +1,15 @@
-import { describe, it, before, afterEach } from 'mocha';
-import { assert, SinonSpy, stub, restore } from 'sinon';
-import { Request, Response } from 'express';
+import { describe, it, beforeAll, jest, expect } from '@jest/globals';
+import { Request, response, Response } from 'express';
 
 import { postUser, getUsers, getOneUser } from './users';
 
 import User from '../models/user';
 
+jest.mock('../models/user');
+
 describe('Users controller', function () {
-  afterEach(function () {
-    restore();
+  beforeAll(function () {
+    jest.resetAllMocks();
   });
 
   describe('POST users', function () {
@@ -20,20 +21,21 @@ describe('Users controller', function () {
         json: () => {},
         status: (code: number) => {},
       } as Response;
-      res.json = stub(res, 'json').returns(res);
-      res.status = stub(res, 'status').returns(res);
+      res.json = jest.fn(() => res);
+      res.status = jest.fn(() => res);
 
       const user = new User('test@test.com', 'test');
 
-      const userStub = stub(User.prototype, 'save').callsFake(() => {
+      User.prototype.save = jest.fn().mockImplementationOnce(function () {
         return Promise.resolve(user);
-      });
+      }) as () => Promise<User>;
+
       await postUser(req, res, () => {});
 
-      assert.called(res.status as SinonSpy);
-      assert.calledWith(res.status as SinonSpy, 201);
-      assert.called(res.json as SinonSpy);
-      assert.calledWith(res.json as SinonSpy, user);
+      expect(res.status).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(user);
     });
 
     it('should call next middleware on posting user without email', async function () {
@@ -41,18 +43,18 @@ describe('Users controller', function () {
         body: { name: 'test_no_email' },
       } as Request;
       const res = {} as Response;
-      const next = stub();
+      const next = jest.fn();
 
       const dbError = new Error('stubbed DB error');
 
-      const userStub = stub(User.prototype, 'save').callsFake(() => {
+      User.prototype.save = jest.fn().mockImplementationOnce(function () {
         throw dbError;
-      });
+      }) as () => Promise<User>;
 
       await postUser(req, res, next);
 
-      assert.called(next);
-      assert.calledWith(next, dbError);
+      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(dbError);
     });
 
     it('should call next middleware on posting user without name', async function () {
@@ -60,18 +62,18 @@ describe('Users controller', function () {
         body: { useremail: 'test1@test.com' },
       } as Request;
       const res = {} as Response;
-      const next = stub();
+      const next = jest.fn();
 
       const dbError = new Error('stubbed DB error');
 
-      const userStub = stub(User.prototype, 'save').callsFake(() => {
+      User.prototype.save = jest.fn().mockImplementationOnce(function () {
         throw dbError;
-      });
+      }) as () => Promise<User>;
 
       await postUser(req, res, next);
 
-      assert.called(next);
-      assert.calledWith(next, dbError);
+      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(dbError);
     });
   });
 
@@ -82,19 +84,21 @@ describe('Users controller', function () {
         json: () => {},
         status: (code: number) => {},
       } as Response;
-      res.json = stub(res, 'json').returns(res);
-      res.status = stub(res, 'status').returns(res);
+      res.json = jest.fn(() => res);
+      res.status = jest.fn(() => res);
 
-      const userStub = stub(User, 'fetchAll').callsFake(() => {
-        return Promise.resolve([]);
-      });
+      const users: User[] = [];
+
+      User.fetchAll = jest.fn().mockImplementationOnce(function () {
+        return Promise.resolve(users);
+      }) as () => Promise<User[]>;
 
       await getUsers(req, res, () => {});
 
-      assert.called(res.status as SinonSpy);
-      assert.calledWith(res.status as SinonSpy, 200);
-      assert.called(res.json as SinonSpy);
-      assert.calledWith(res.json as SinonSpy, []);
+      expect(res.status).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(users);
     });
 
     it('should return array of users', async function () {
@@ -103,41 +107,41 @@ describe('Users controller', function () {
         json: () => {},
         status: (code: number) => {},
       } as Response;
-      res.json = stub(res, 'json').returns(res);
-      res.status = stub(res, 'status').returns(res);
+      res.json = jest.fn(() => res);
+      res.status = jest.fn(() => res);
 
       const users = [
         new User('test1@test.com', 'test1'),
         new User('test2@test.com', 'test2'),
       ];
 
-      const userStub = stub(User, 'fetchAll').callsFake(() => {
+      User.fetchAll = jest.fn().mockImplementationOnce(function () {
         return Promise.resolve(users);
-      });
+      }) as () => Promise<User[]>;
 
       await getUsers(req, res, () => {});
 
-      assert.called(res.status as SinonSpy);
-      assert.calledWith(res.status as SinonSpy, 200);
-      assert.called(res.json as SinonSpy);
-      assert.calledWith(res.json as SinonSpy, users);
+      expect(res.status).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(users);
     });
 
     it('should call next middleware in case of DB error', async function () {
       const req = {} as Request;
       const res = {} as Response;
-      const next = stub();
+      const next = jest.fn();
 
       const dbError = new Error('stubbed DB error');
 
-      const userStub = stub(User, 'fetchAll').callsFake(() => {
+      User.fetchAll = jest.fn().mockImplementationOnce(function () {
         throw dbError;
-      });
+      }) as () => Promise<User[]>;
 
       await getUsers(req, res, next);
 
-      assert.called(next);
-      assert.calledWith(next, dbError);
+      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(dbError);
     });
   });
 
@@ -152,21 +156,21 @@ describe('Users controller', function () {
         json: () => {},
         status: (code: number) => {},
       } as Response;
-      res.json = stub(res, 'json').returns(res);
-      res.status = stub(res, 'status').returns(res);
+      res.json = jest.fn(() => res);
+      res.status = jest.fn(() => res);
 
       const user = new User('test@test.com', 'test');
 
-      const userStub = stub(User, 'fetchById').callsFake((id: number) => {
+      User.fetchById = jest.fn().mockImplementationOnce(function (id) {
         return Promise.resolve(id === 1 ? user : undefined);
-      });
+      }) as (id: number) => Promise<User>;
 
       await getOneUser(req as Request, res, () => {});
 
-      assert.called(res.status as SinonSpy);
-      assert.calledWith(res.status as SinonSpy, 404);
-      assert.called(res.json as SinonSpy);
-      assert.calledWith(res.json as SinonSpy, 'User not found');
+      expect(res.status).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith('User not found');
     });
 
     it('should return status 200 and found user', async function () {
@@ -179,21 +183,21 @@ describe('Users controller', function () {
         json: () => {},
         status: (code: number) => {},
       } as Response;
-      res.json = stub(res, 'json').returns(res);
-      res.status = stub(res, 'status').returns(res);
+      res.json = jest.fn(() => res);
+      res.status = jest.fn(() => res);
 
       const user = new User('test@test.com', 'test');
 
-      const userStub = stub(User, 'fetchById').callsFake((id: number) => {
+      User.fetchById = jest.fn().mockImplementationOnce(function (id) {
         return Promise.resolve(id === 1 ? user : undefined);
-      });
+      }) as (id: number) => Promise<User>;
 
       await getOneUser(req as Request, res, () => {});
 
-      assert.called(res.status as SinonSpy);
-      assert.calledWith(res.status as SinonSpy, 200);
-      assert.called(res.json as SinonSpy);
-      assert.calledWith(res.json as SinonSpy, user);
+      expect(res.status).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(user);
     });
 
     it('should call next middleware in case of DB error', async function () {
@@ -203,18 +207,18 @@ describe('Users controller', function () {
         },
       } as Partial<Request>;
       const res = {} as Response;
-      const next = stub();
+      const next = jest.fn();
 
       const dbError = new Error('stubbed DB error');
 
-      const userStub = stub(User, 'fetchById').callsFake(() => {
+      User.fetchById = jest.fn().mockImplementationOnce(function (id) {
         throw dbError;
-      });
+      }) as (id: number) => Promise<User>;
 
       await getOneUser(req as Request, res, next);
 
-      assert.called(next);
-      assert.calledWith(next, dbError);
+      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(dbError);
     });
   });
 });
