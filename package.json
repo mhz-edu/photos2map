@@ -4,7 +4,7 @@
   "description": "Put your photos on the map",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "nyc mocha",
     "start": "node ./dist/app.js",
     "build": "tsc",
     "start:dev": "nodemon -r dotenv/config ./dist/app.js",
@@ -46,6 +46,7 @@
     "eslint-plugin-import": "^2.25.4",
     "mocha": "^9.2.2",
     "nodemon": "^2.0.15",
+    "nyc": "^15.1.0",
     "prettier": "^2.5.1",
     "sinon": "^13.0.2",
     "ts-node": "^10.7.0",

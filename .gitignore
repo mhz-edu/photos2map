@@ -4,3 +4,5 @@ package-lock.json
 *.sh
 .vscode
 *.env
+coverage
+.nyc_output
