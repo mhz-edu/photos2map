@@ -9,7 +9,7 @@ interface IError extends Error {
   data: any;
 }
 
-export const postUser: RequestHandler = (req, res, next) => {
+export const postUser: RequestHandler = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed') as IError;
@@ -20,36 +20,32 @@ export const postUser: RequestHandler = (req, res, next) => {
   let userEmail = req.body.useremail;
   let name = req.body.name;
   let user = new User(userEmail, name);
-  user
-    .save()
-    .then((user) => res.json(user))
-    .catch((error) => next(error));
+  try {
+    const savedUser = await user.save();
+    res.status(201).json(savedUser);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const getUsers: RequestHandler = (req, res, next) => {
-  User.fetchAll()
-    .then((users) => res.json(users))
-    .catch((error) => res.json(error));
+export const getUsers: RequestHandler = async (req, res, next) => {
+  try {
+    const users = await User.fetchAll();
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const getOneUser: RequestHandler = (req, res, next) => {
+export const getOneUser: RequestHandler = async (req, res, next) => {
   let userId = parseInt(req.params.userId);
-  User.fetchById(userId)
-    .then((user) => {
-      console.log(user);
-      if (user) {
-        res.json(user);
-      }
-      res.json('User not found');
-    })
-    .catch((error) => res.json(error));
-};
-
-export const getUserAlbums: RequestHandler = (req, res, next) => {
-  let userId = parseInt(req.params.userId);
-  Album.fetchAllByUserId(userId)
-    .then((albums) => {
-      res.json(albums);
-    })
-    .catch((error) => res.json(error));
+  try {
+    const user = await User.fetchById(userId);
+    if (user) {
+      return res.status(200).json(user);
+    }
+    res.status(404).json('User not found');
+  } catch (error) {
+    next(error);
+  }
 };
