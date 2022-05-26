@@ -2,7 +2,12 @@ photos2map
 ===
 Simple API to get coordinates from the image files. Idea is to allow user to manage albums of images and to get an array of coordinates for all images in the particular album.
 
-Service is built using nodejs, typescript, express, postgresql
+Service is built using nodejs, typescript, express, postgresql.
+
+Demo
+---
+Deployed in heroku for demo purpose. Swagger API documentation available by the link below.  
+<https://photos2map.herokuapp.com/api-doc/>
 
 How to run
 ---
