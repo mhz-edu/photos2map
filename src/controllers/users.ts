@@ -11,16 +11,16 @@ interface IError extends Error {
 
 export const postUser: RequestHandler = async (req, res, next) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed') as IError;
-    error.statusCode = 422;
-    error.data = errors.array();
-    throw error;
-  }
-  let userEmail = req.body.useremail;
-  let name = req.body.name;
-  let user = new User(userEmail, name);
   try {
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation failed') as IError;
+      error.statusCode = 422;
+      error.data = errors.array();
+      throw error;
+    }
+    let userEmail = req.body.useremail;
+    let name = req.body.name;
+    let user = new User(userEmail, name);
     const savedUser = await user.save();
     res.status(201).json(savedUser);
   } catch (error) {
