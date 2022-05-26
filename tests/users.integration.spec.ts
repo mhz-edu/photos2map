@@ -54,8 +54,8 @@ describe('GET users/:userId', function () {
     await request(app)
       .get('/api/users/100')
       .expect('Content-Type', /application\/json/)
-      .expect(200)
-      .expect('User not found');
+      .expect(404)
+      .expect('"User not found"');
   });
 });
 
