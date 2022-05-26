@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   postgres:
-    image: postgres:12-alpine
+    image: postgres:14-alpine
     container_name: postgres
     env_file:
       - ./.env
@@ -10,7 +10,7 @@ services:
       - data:/var/lib/postgresql/data
 
   backend:
-    build: ./.
+    build: .
     container_name: backend
     ports:
       - '3000:3000'
