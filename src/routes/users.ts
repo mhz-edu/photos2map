@@ -1,12 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 
-import {
-  postUser,
-  getOneUser,
-  getUsers,
-  getUserAlbums,
-} from '../controllers/users';
+import { postUser, getOneUser, getUsers } from '../controllers/users';
 
 const usersRouter = Router();
 
@@ -22,7 +17,5 @@ usersRouter.post(
 usersRouter.get('/:userId', getOneUser);
 
 usersRouter.get('/', getUsers);
-
-usersRouter.get('/:userId/albums', getUserAlbums);
 
 export default usersRouter;
