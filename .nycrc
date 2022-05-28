@@ -4,6 +4,11 @@
     "src/**/*.ts"
   ],
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/migrations/*.*"
+  ],
+  "reporter": [
+    "text",
+    "html"
   ]
 }

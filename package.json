@@ -4,7 +4,7 @@
   "description": "Put your photos on the map",
   "main": "index.js",
   "scripts": {
-    "test": "DOTENV_CONFIG_PATH=./.test.env nyc mocha",
+    "test": "nyc mocha",
     "start": "node ./dist/server.js",
     "build": "tsc",
     "start:dev": "nodemon -r dotenv/config ./dist/server.js",

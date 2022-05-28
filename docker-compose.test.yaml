@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  postgres-test:
+    image: postgres:14-alpine
+    container_name: postgres-test
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=dbadmin
+      - POSTGRES_DB=testdb
+
+  backend-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: backend-test
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=test
+      - DATABASE_URL=postgresql://dbadmin:test@postgres-test:5432/testdb
+    command: npm test
+    volumes:
+      - ./coverage:/app/coverage
+    depends_on:
+      - postgres-test

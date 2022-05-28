@@ -4,3 +4,6 @@ dist
 .vscode
 *.env
 Dockerfile*
+docker*
+.nyc_output
+heroku.yml
