@@ -44,7 +44,9 @@ const knexfile: { [index: string]: any } = {
     },
     migrations: {
       tableName: 'knex_migrations',
-      extension: 'ts',
+      extension: 'js',
+      directory: 'dist/migrations',
+      loadExtensions: ['.js'],
     },
     ssl: {
       require: true,
