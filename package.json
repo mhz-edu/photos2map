@@ -8,8 +8,7 @@
     "start": "node ./dist/server.js",
     "build": "tsc",
     "start:dev": "nodemon -L ./src/server.ts",
-    "migrate": "npx knex migrate:latest --knexfile ./dist/knexfile.js",
-    "start:migrate": "npm run migrate && npm start"
+    "migrate": "npx knex migrate:latest --knexfile ./dist/knexfile.js"
   },
   "repository": {
     "type": "git",
