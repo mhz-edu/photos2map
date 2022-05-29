@@ -7,7 +7,7 @@
     "test": "nyc mocha",
     "start": "node ./dist/server.js",
     "build": "tsc",
-    "start:dev": "nodemon -r dotenv/config ./dist/server.js",
+    "start:dev": "nodemon -L ./src/server.ts",
     "migrate": "npx knex migrate:latest --knexfile ./dist/knexfile.js",
     "start:migrate": "npm run migrate && npm start"
   },

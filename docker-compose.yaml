@@ -16,7 +16,9 @@ services:
       - '3000:3000'
     env_file:
       - ./.env
-    command: npm run start:migrate
+    command: npm run start:dev
+    volumes:
+      - ./src:/app/src
     depends_on:
       - postgres
 
