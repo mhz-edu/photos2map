@@ -1,0 +1,69 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Album map</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+      integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+      integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+      crossorigin=""
+    ></script>
+  </head>
+
+  <body>
+    <div id="title"></div>
+    <div style="height: 80%" id="map"></div>
+    <script>
+      const getMiddlePoint = (points) => {
+        let totalPt = points.reduce((prev, curr) => {
+          return { lon: prev.lon + curr.lon, lat: prev.lat + curr.lat };
+        });
+        const middlePoint = {
+          lon: totalPt.lon / points.length,
+          lat: totalPt.lat / points.length,
+        };
+        return middlePoint;
+      };
+      let url = '';
+      let albumId = /albums\/(\d*)\/map/.exec(window.location.href)[1];
+      fetch(url + '/api/albums/' + albumId)
+        .then((response) => {
+          return response.json();
+        })
+        .then((album) => {
+          const titleDiv = document.getElementById('title');
+          const title = document.createElement('h2');
+          title.textContent = album.title;
+          titleDiv.appendChild(title);
+
+          return fetch(url + '/api/albums/' + albumId + '/images');
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((points) => {
+          const middlePoint = getMiddlePoint(points);
+          const map = L.map('map').setView(
+            [middlePoint.lat, middlePoint.lon],
+            13
+          );
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap',
+          }).addTo(map);
+          points.forEach((pt) => {
+            const marker = L.marker([pt.lat, pt.lon]).addTo(map);
+            marker.bindPopup(`${pt.id}`);
+          });
+        })
+        .catch((error) => console.log(error));
+    </script>
+  </body>
+</html>
