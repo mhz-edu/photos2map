@@ -26,6 +26,10 @@ class Image {
   static fetchAllByAlbumId(id: number): Promise<Image[]> {
     return pg.table<Image>('images').select().where('album_id', id);
   }
+
+  static saveMultiple(images: Image[]): Promise<Image[]> {
+    return pg.table<Image>('images').insert(images).returning('*');
+  }
 }
 
 export default Image;

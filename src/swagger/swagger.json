@@ -198,8 +198,15 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Image"
+              "type": "array",
+              "items": { "$ref": "#/definitions/Image" }
             }
+          },
+          "404": {
+            "description": "Album not found"
+          },
+          "422": {
+            "description": "Validation error"
           }
         }
       },
