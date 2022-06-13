@@ -1,6 +1,7 @@
-import { ExifData } from 'exif';
+import { Express } from 'express';
+import { ExifData, ExifImage } from 'exif';
 
-const coordinatesConverter = (gpsParams: ExifData['gps']) => {
+export const coordinatesConverter = (gpsParams: ExifData['gps']) => {
   const MINUTES_IN_DEGREE = 60;
   const SECONDS_IN_DEGREE = 3600;
   let latSign = 1;
@@ -23,4 +24,21 @@ const coordinatesConverter = (gpsParams: ExifData['gps']) => {
   return { lat: latDegree, lon: lonDegree };
 };
 
-export default coordinatesConverter;
+export const extractExifGps = (
+  file: Express.Multer.File
+): Promise<ExifData['gps']> => {
+  return new Promise(function (resolve, reject) {
+    new ExifImage(
+      { image: file.buffer },
+      (error: Error | null, exifData: ExifData) => {
+        if (error) {
+          console.log(`Error: ${error.message}`);
+          reject(error);
+        } else {
+          console.log(exifData.gps);
+          resolve(exifData.gps);
+        }
+      }
+    );
+  });
+};

@@ -1,8 +1,7 @@
 import { RequestHandler, Express } from 'express';
-import { ExifData, ExifImage } from 'exif';
 
 import Image from '../models/image';
-import coordinatesConverter from '../util/coordinatesConverter';
+import { coordinatesConverter, extractExifGps } from '../util/coordinatesUtils';
 import Album from '../models/album';
 
 interface IError extends Error {
@@ -10,60 +9,43 @@ interface IError extends Error {
   data: any;
 }
 
-const extractExifGps = (
-  file: Express.Multer.File
-): Promise<ExifData['gps']> => {
-  return new Promise(function (resolve, reject) {
-    new ExifImage(
-      { image: file.buffer },
-      (error: Error | null, exifData: ExifData) => {
-        if (error) {
-          console.log(`Error: ${error.message}`);
-          reject(error);
-        } else {
-          console.log(exifData.gps);
-          resolve(exifData.gps);
-        }
-      }
+export const postMultiImage: RequestHandler = async (req, res, next) => {
+  let albumId = parseInt(req.params.albumId);
+  try {
+    const album = await Album.fetchById(albumId);
+    if (!album) {
+      return res.status(404).json('Album not found');
+    }
+    if (!req.files || req.files.length == 0) {
+      return res.status(422).json('No files');
+    }
+    const files = req.files as Express.Multer.File[];
+    const gpsArray = await Promise.all(
+      files.map((file) => {
+        return extractExifGps(file);
+      })
     );
-  });
+    const coordsArray = gpsArray.map(coordinatesConverter);
+    const images = coordsArray.map((coords) => {
+      return new Image(albumId, coords.lat, coords.lon);
+    });
+    const result = await Image.saveMultiple(images);
+    return res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const postMultiImage: RequestHandler = (req, res, next) => {
+export const getAlbumImages: RequestHandler = async (req, res, next) => {
   let albumId = parseInt(req.params.albumId);
-  Album.fetchById(albumId)
-    .then((album) => {
-      if (!album) {
-        const error = new Error('Album not found') as IError;
-        error.statusCode = 404;
-        throw error;
-      }
-      if (!req.files || req.files.length == 0) {
-        const error = new Error('No files') as IError;
-        error.statusCode = 422;
-        throw error;
-      }
-      const files = req.files as Express.Multer.File[];
-      return Promise.all(
-        files.map((file) => {
-          return extractExifGps(file);
-        })
-      );
-    })
-    .then((gpsArray) => {
-      const coordsArray = gpsArray.map(coordinatesConverter);
-      const images = coordsArray.map((coords) => {
-        return new Image(albumId, coords.lat, coords.lon);
-      });
-      return Image.saveMultiple(images);
-    })
-    .then((result) => res.status(201).json(result))
-    .catch((error) => next(error));
-};
-
-export const getAlbumImages: RequestHandler = (req, res) => {
-  let albumId = parseInt(req.params.albumId);
-  Image.fetchAllByAlbumId(albumId)
-    .then((images) => res.json(images))
-    .catch((error) => console.log(error));
+  try {
+    const album = await Album.fetchById(albumId);
+    if (album) {
+      const images = await Image.fetchAllByAlbumId(albumId);
+      return res.status(200).json(images);
+    }
+    res.status(404).json('Album not found');
+  } catch (error) {
+    next(error);
+  }
 };
