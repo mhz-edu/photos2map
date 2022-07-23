@@ -21,6 +21,7 @@
     <div id="title"></div>
     <div style="height: 80%" id="map"></div>
     <script>
+      const defaultZoom = 13;
       const getMiddlePoint = (points) => {
         let totalPt = points.reduce((prev, curr) => {
           return { lon: prev.lon + curr.lon, lat: prev.lat + curr.lat };
@@ -52,7 +53,7 @@
           const middlePoint = getMiddlePoint(points);
           const map = L.map('map').setView(
             [middlePoint.lat, middlePoint.lon],
-            13
+            defaultZoom
           );
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
