@@ -22,6 +22,9 @@
     <div style="height: 80%" id="map"></div>
     <script>
       const defaultZoom = 13;
+      const url = '';
+      const albumId = /albums\/(\d*)\/map/.exec(window.location.href)[1];
+
       const getMiddlePoint = (points) => {
         let totalPt = points.reduce((prev, curr) => {
           return { lon: prev.lon + curr.lon, lat: prev.lat + curr.lat };
@@ -32,39 +35,34 @@
         };
         return middlePoint;
       };
-      let url = '';
-      let albumId = /albums\/(\d*)\/map/.exec(window.location.href)[1];
-      fetch(url + '/api/albums/' + albumId)
-        .then((response) => {
-          return response.json();
-        })
-        .then((album) => {
-          const titleDiv = document.getElementById('title');
-          const title = document.createElement('h2');
-          title.textContent = album.title;
-          titleDiv.appendChild(title);
-
-          return fetch(url + '/api/albums/' + albumId + '/images');
-        })
-        .then((response) => {
-          return response.json();
-        })
-        .then((points) => {
-          const middlePoint = getMiddlePoint(points);
-          const map = L.map('map').setView(
-            [middlePoint.lat, middlePoint.lon],
-            defaultZoom
-          );
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap',
-          }).addTo(map);
-          points.forEach((pt) => {
-            const marker = L.marker([pt.lat, pt.lon]).addTo(map);
-            marker.bindPopup(`${pt.id}`);
-          });
-        })
-        .catch((error) => console.log(error));
+      const addTitle = async (albumId) => {
+        const response = await fetch(url + '/api/albums/' + albumId)
+        const album = await response.json()
+        const titleDiv = document.getElementById('title');
+        const title = document.createElement('h2');
+        title.textContent = album.title;
+        titleDiv.appendChild(title);
+      }
+      const addMap = async (albumId) => {
+        const response = await fetch(url + '/api/albums/' + albumId + '/images')
+        const points = await response.json()
+        const middlePoint = getMiddlePoint(points);
+        const map = L.map('map').setView(
+          [middlePoint.lat, middlePoint.lon],
+          defaultZoom
+        );
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap',
+        }).addTo(map);
+        points.forEach((pt) => {
+          const marker = L.marker([pt.lat, pt.lon]).addTo(map);
+          marker.bindPopup(`${pt.id}`);
+        });
+      }
+      
+      addTitle(albumId)
+      addMap(albumId)
     </script>
   </body>
 </html>
