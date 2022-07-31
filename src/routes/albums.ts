@@ -6,6 +6,7 @@ import {
   getOneAlbum,
   postAlbum,
   getUserAlbums,
+  getMap,
 } from '../controllers/albums';
 
 const albumsRouter = Router();
@@ -21,5 +22,7 @@ albumsRouter.get('/:albumId', getOneAlbum);
 albumsRouter.get('/', getAlbums);
 
 albumsRouter.get('/:userId/albums', getUserAlbums);
+
+albumsRouter.get('/:albumId/map', getMap);
 
 export default albumsRouter;

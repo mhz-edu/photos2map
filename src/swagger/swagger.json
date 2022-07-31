@@ -147,6 +147,30 @@
         }
       }
     },
+    "/albums/{albumId}/map": {
+      "get": {
+        "tags": ["Albums"],
+        "summary": "Returns an HTML page with map and image points of a single album",
+        "produces": ["text/html"],
+        "parameters": [
+          {
+            "name": "albumId",
+            "in": "path",
+            "description": "Album Id to get",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Album not found"
+          }
+        }
+      }
+    },
     "/users/{userId}/albums": {
       "get": {
         "tags": ["Albums"],
