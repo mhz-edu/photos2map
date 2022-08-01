@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc mocha",
+    "testSingle": "mocha --config ./.mocharc.single.json ",
     "start": "node ./dist/server.js",
     "build": "tsc",
     "start:dev": "nodemon -L ./src/server.ts",

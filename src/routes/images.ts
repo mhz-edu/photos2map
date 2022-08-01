@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 
-import { getAlbumImages, postImage } from '../controllers/images';
+import { getAlbumImages, postMultiImage } from '../controllers/images';
 
 const imagesRouter = Router();
 
@@ -13,7 +13,7 @@ const upload = multer({
   limits: { fileSize: MAX_FILE_SIZE },
   fileFilter: (req, file, cb) => {
     if (file.mimetype === 'image/jpeg') {
-      cb(null, true);
+      return cb(null, true);
     }
     cb(null, false);
   },
@@ -23,8 +23,8 @@ imagesRouter.get('/api/albums/:albumId/images', getAlbumImages);
 
 imagesRouter.post(
   '/api/albums/:albumId/images',
-  upload.single('upfile'),
-  postImage
+  upload.array('upfile', 10),
+  postMultiImage
 );
 
 export default imagesRouter;
