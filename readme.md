@@ -7,7 +7,7 @@ Service is built using nodejs, typescript, express, postgresql.
 Demo
 ---
 Deployed in heroku for demo purpose. Swagger API documentation available by the link below.  
-<https://photos2map.herokuapp.com/api-doc/>
+<https://photos2map.onrender.com/api-doc/>
 
 How to run
 ---
@@ -38,5 +38,5 @@ Features
 
 1. Full users, albums, image records CRUD
 2. Users authentication/authorization
-3. Multiple file upload
-4. Generate map view with image coordinates
+3. Multiple file upload - Done
+4. Generate map view with image coordinates - Done
